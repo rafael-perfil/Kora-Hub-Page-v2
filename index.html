@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kora Hub — 6 direções de design</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #07101F;
+    --bg-base: #0B1426;
+    --bg-elev: #131F38;
+    --border: #1B2A47;
+    --border-soft: #16243E;
+    --text: #E8EDF7;
+    --text-mute: #8995AE;
+    --text-dim: #5E6B85;
+    --blue-light: #9FC5F0;
+    --blue: #5A8FD6;
+    --grad: linear-gradient(135deg, #9FC5F0 0%, #5A8FD6 50%, #2E5A9B 100%);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Geist", -apple-system, sans-serif;
+    background: var(--bg-base);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+
+  .grid-bg {
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(var(--border-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border-soft) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 0%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 0%, transparent 70%);
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  header.top {
+    padding: 60px 0 32px;
+    text-align: center;
+  }
+  header.top .logo {
+    height: 56px;
+    margin: 0 auto 48px;
+    display: block;
+  }
+  header.top .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: "Geist Mono", monospace;
+    font-size: 12px;
+    color: var(--blue-light);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: rgba(90, 143, 214, 0.06);
+    margin-bottom: 28px;
+  }
+  header.top .eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--blue-light);
+    box-shadow: 0 0 12px var(--blue-light);
+  }
+  header.top h1 {
+    font-size: clamp(40px, 5.5vw, 72px);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin: 0 0 24px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #B4C5E0 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  header.top h1 em {
+    font-style: normal;
+    background: var(--grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  header.top p.lead {
+    font-size: 19px;
+    color: var(--text-mute);
+    max-width: 640px;
+    margin: 0 auto 0;
+    line-height: 1.55;
+  }
+
+  /* Section labels */
+  .theme-section {
+    padding: 48px 0 24px;
+  }
+  .theme-label {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 40px;
+    font-family: "Geist Mono", monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-mute);
+  }
+  .theme-label::before {
+    content: "";
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .theme-label.dark::before { background: #1B2A47; border: 1px solid #5A8FD6; }
+  .theme-label.light::before { background: #F8FAFC; border: 1px solid #DDE3ED; }
+  .theme-label .line {
+    flex: 1;
+    height: 1px;
+    background: var(--border-soft);
+  }
+  .theme-label .count {
+    color: var(--text-dim);
+    font-size: 11px;
+  }
+
+  /* Version cards */
+  .versions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .v-card {
+    background: var(--bg-elev);
+    border: 1px solid var(--border-soft);
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+  }
+  .v-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--border);
+    box-shadow: 0 30px 80px rgba(46, 90, 155, 0.25);
+  }
+  .v-thumb {
+    aspect-ratio: 16 / 11;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border-soft);
+    background: var(--bg-deep);
+  }
+
+  /* ===== DARK THUMBS ===== */
+
+  /* Thumb 1 — Linear/Vercel dark */
+  .thumb-1 {
+    background: #0B1426;
+    padding: 22px 28px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .thumb-1 .row { display: flex; gap: 10px; justify-content: space-between; align-items: center; font-size: 9px; color: #5E6B85; }
+  .thumb-1 .row .lg { width: 38px; height: 10px; background: #8995AE; border-radius: 2px; }
+  .thumb-1 .row .menu { display: flex; gap: 10px; }
+  .thumb-1 h2 { font-size: 26px; font-weight: 500; line-height: 1.05; letter-spacing: -0.02em; margin: 4px 0 4px; color: #E8EDF7; }
+  .thumb-1 h2 em { font-style: normal; background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .thumb-1 .l { font-size: 10px; color: #8995AE; margin: 0; }
+  .thumb-1 .ctas { display: flex; gap: 6px; margin-top: 4px; }
+  .thumb-1 .btn-s { font-size: 9px; padding: 5px 10px; border-radius: 6px; background: white; color: #0B1426; font-weight: 500; }
+  .thumb-1 .btn-s.g { background: transparent; color: #E8EDF7; border: 1px solid #1B2A47; }
+  .thumb-1 .grid-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #16243E; border: 1px solid #16243E; border-radius: 8px; margin-top: auto; }
+  .thumb-1 .grid-mini > div { background: #0B1426; padding: 8px; min-height: 42px; display: flex; flex-direction: column; gap: 3px; }
+  .thumb-1 .ico-s { width: 13px; height: 13px; border-radius: 4px; background: rgba(90,143,214,0.15); border: 1px solid rgba(90,143,214,0.25); }
+  .thumb-1 .nm-s { font-size: 9px; font-weight: 500; color: #E8EDF7; }
+  .thumb-1 .ds-s { font-size: 7px; color: #8995AE; }
+
+  /* Thumb 2 — Apple Premium dark */
+  .thumb-2 {
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 20%, rgba(106, 156, 222, 0.18), transparent 60%),
+      radial-gradient(ellipse 60% 60% at 50% 100%, rgba(46, 90, 155, 0.3), transparent 70%),
+      #050B17;
+    padding: 16px 24px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    text-align: center;
+  }
+  .thumb-2 .eb { font-size: 8px; color: #B9D6F5; text-transform: uppercase; letter-spacing: 0.15em; }
+  .thumb-2 h2 {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin: 0;
+    background: linear-gradient(180deg, white, #88A6D8);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .thumb-2 h2 em { font-style: italic; color: #B9D6F5; -webkit-text-fill-color: #B9D6F5; }
+  .thumb-2 .ll { font-size: 9px; color: #A3B0CC; max-width: 220px; margin: 0; }
+  .thumb-2 .btn-r { font-size: 9px; padding: 6px 14px; border-radius: 999px; background: white; color: #050B17; font-weight: 500; margin-top: 4px; }
+  .thumb-2 .product-mini {
+    margin-top: 6px;
+    width: 92%;
+    border-radius: 8px;
+    background: linear-gradient(180deg, rgba(106,156,222,0.2), rgba(106,156,222,0.04));
+    padding: 4px;
+    box-shadow: 0 8px 24px rgba(46,90,155,0.4);
+  }
+  .thumb-2 .product-inner {
+    background: #050B17;
+    border-radius: 6px;
+    aspect-ratio: 16/8;
+    border: 1px solid #1C2A47;
+    display: grid; grid-template-columns: 50px 1fr; gap: 4px; padding: 4px;
+  }
+  .thumb-2 .pi-side { display: flex; flex-direction: column; gap: 3px; }
+  .thumb-2 .pi-row { height: 6px; background: rgba(106,156,222,0.15); border-radius: 2px; }
+  .thumb-2 .pi-row.a { background: #6A9CDE; }
+  .thumb-2 .pi-main { display: flex; flex-direction: column; gap: 3px; padding: 3px; }
+  .thumb-2 .pi-st { display: flex; gap: 3px; }
+  .thumb-2 .pi-st > div { flex: 1; height: 14px; background: #1C2A47; border-radius: 2px; }
+  .thumb-2 .pi-chat { flex: 1; background: rgba(14,26,46,0.6); border-radius: 3px; padding: 3px; display: flex; flex-direction: column; gap: 2px; }
+  .thumb-2 .pi-msg { height: 4px; border-radius: 2px; background: #1C2A47; }
+  .thumb-2 .pi-msg.us { background: #6A9CDE; align-self: flex-end; width: 60%; }
+  .thumb-2 .pi-msg.tm { width: 70%; }
+
+  /* Thumb 3 — BR SaaS dark */
+  .thumb-3 {
+    background:
+      radial-gradient(circle 200px at 20% 30%, rgba(90,143,214,0.12), transparent 70%),
+      radial-gradient(circle 180px at 80% 80%, rgba(46,90,155,0.2), transparent 70%),
+      #06101F;
+    padding: 14px 16px;
+    display: grid; grid-template-columns: 1fr 1.1fr; gap: 10px;
+  }
+  .thumb-3 .left { display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+  .thumb-3 .badge {
+    display: inline-flex; gap: 5px; align-items: center;
+    background: rgba(74,222,128,0.1);
+    border: 1px solid rgba(74,222,128,0.25);
+    color: #4ADE80;
+    padding: 2px 7px; border-radius: 999px;
+    font-size: 8px; font-weight: 600;
+    align-self: flex-start;
+  }
+  .thumb-3 .badge::before { content: ""; width: 4px; height: 4px; border-radius: 50%; background: #4ADE80; }
+  .thumb-3 h2 { font-family: "Manrope", sans-serif; font-size: 18px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; margin: 0; color: #F2F5FB; }
+  .thumb-3 h2 .h { background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .thumb-3 .ll { font-size: 9px; color: #A8B5CE; margin: 0; line-height: 1.4; }
+  .thumb-3 .ctas { display: flex; gap: 4px; margin-top: 4px; }
+  .thumb-3 .b1 { background: #5A8FD6; color: white; font-size: 8px; padding: 4px 7px; border-radius: 4px; font-weight: 600; }
+  .thumb-3 .b2 { background: #25D366; color: white; font-size: 8px; padding: 4px 7px; border-radius: 4px; font-weight: 600; }
+
+  .thumb-3 .dash {
+    background: rgba(18,32,54,0.95);
+    border: 1px solid #1F2E4D;
+    border-radius: 8px;
+    padding: 7px;
+    display: flex; flex-direction: column; gap: 5px;
+  }
+  .thumb-3 .d-h { display: flex; justify-content: space-between; align-items: center; }
+  .thumb-3 .d-h .tt { font-size: 8px; font-weight: 600; color: #F2F5FB; }
+  .thumb-3 .d-h .dot-g { width: 5px; height: 5px; background: #4ADE80; border-radius: 50%; }
+  .thumb-3 .d-st { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+  .thumb-3 .d-st > div { padding: 4px 5px; background: rgba(26,42,71,0.6); border: 1px solid #1F2E4D; border-radius: 4px; }
+  .thumb-3 .d-st .v { font-size: 10px; font-weight: 700; letter-spacing: -0.02em; color: #F2F5FB; }
+  .thumb-3 .d-st .l { font-size: 6px; color: #6E7B96; text-transform: uppercase; letter-spacing: 0.08em; }
+  .thumb-3 .d-bars { display: flex; gap: 2px; align-items: flex-end; height: 24px; }
+  .thumb-3 .d-bars > div { flex: 1; background: var(--grad); border-radius: 1px 1px 0 0; opacity: 0.85; }
+
+  /* ===== LIGHT THUMBS ===== */
+
+  /* Thumb 4 — Linear/Vercel light */
+  .thumb-4 {
+    background: #FFFFFF;
+    padding: 22px 28px;
+    display: flex; flex-direction: column; gap: 14px;
+    color: #0B1426;
+  }
+  .thumb-4 .row { display: flex; gap: 10px; justify-content: space-between; align-items: center; font-size: 9px; color: #94A0BA; }
+  .thumb-4 .row .lg { width: 38px; height: 10px; background: #5C6B85; border-radius: 2px; }
+  .thumb-4 .row .menu { display: flex; gap: 10px; }
+  .thumb-4 h2 { font-size: 26px; font-weight: 500; line-height: 1.05; letter-spacing: -0.02em; margin: 4px 0 4px;
+    background: linear-gradient(180deg, #0B1426 0%, #2E5A9B 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .thumb-4 h2 em { font-style: normal; background: linear-gradient(135deg, #4378BC, #2E5A9B, #1E4480); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .thumb-4 .l { font-size: 10px; color: #5C6B85; margin: 0; }
+  .thumb-4 .ctas { display: flex; gap: 6px; margin-top: 4px; }
+  .thumb-4 .btn-s { font-size: 9px; padding: 5px 10px; border-radius: 6px; background: #2E5A9B; color: white; font-weight: 500; }
+  .thumb-4 .btn-s.g { background: transparent; color: #0B1426; border: 1px solid #DDE3ED; }
+  .thumb-4 .grid-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #ECEFF5; border: 1px solid #ECEFF5; border-radius: 8px; margin-top: auto; }
+  .thumb-4 .grid-mini > div { background: #FFFFFF; padding: 8px; min-height: 42px; display: flex; flex-direction: column; gap: 3px; }
+  .thumb-4 .ico-s { width: 13px; height: 13px; border-radius: 4px; background: rgba(46,90,155,0.1); border: 1px solid rgba(46,90,155,0.2); }
+  .thumb-4 .nm-s { font-size: 9px; font-weight: 500; color: #0B1426; }
+  .thumb-4 .ds-s { font-size: 7px; color: #5C6B85; }
+
+  /* Thumb 5 — Apple Premium light (warm cream) */
+  .thumb-5 {
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 20%, rgba(90, 143, 214, 0.12), transparent 60%),
+      radial-gradient(ellipse 60% 60% at 50% 100%, rgba(46, 90, 155, 0.08), transparent 70%),
+      #F8F4EC;
+    padding: 16px 24px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    text-align: center;
+  }
+  .thumb-5 .eb { font-size: 8px; color: #2E5A9B; text-transform: uppercase; letter-spacing: 0.15em; }
+  .thumb-5 h2 {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin: 0;
+    background: linear-gradient(180deg, #1A1612, #2E5A9B);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .thumb-5 h2 em { font-style: italic; color: #2E5A9B; -webkit-text-fill-color: #2E5A9B; }
+  .thumb-5 .ll { font-size: 9px; color: #5A5246; max-width: 220px; margin: 0; }
+  .thumb-5 .btn-r { font-size: 9px; padding: 6px 14px; border-radius: 999px; background: #2E5A9B; color: white; font-weight: 500; margin-top: 4px; }
+  .thumb-5 .product-mini {
+    margin-top: 6px;
+    width: 92%;
+    border-radius: 8px;
+    background: linear-gradient(180deg, rgba(90,143,214,0.25), rgba(90,143,214,0.05));
+    padding: 4px;
+    box-shadow: 0 8px 24px rgba(46,90,155,0.18);
+  }
+  .thumb-5 .product-inner {
+    background: #FFFFFF;
+    border-radius: 6px;
+    aspect-ratio: 16/8;
+    border: 1px solid #DCD2BB;
+    display: grid; grid-template-columns: 50px 1fr; gap: 4px; padding: 4px;
+  }
+  .thumb-5 .pi-side { display: flex; flex-direction: column; gap: 3px; }
+  .thumb-5 .pi-row { height: 6px; background: rgba(46,90,155,0.12); border-radius: 2px; }
+  .thumb-5 .pi-row.a { background: #2E5A9B; }
+  .thumb-5 .pi-main { display: flex; flex-direction: column; gap: 3px; padding: 3px; }
+  .thumb-5 .pi-st { display: flex; gap: 3px; }
+  .thumb-5 .pi-st > div { flex: 1; height: 14px; background: #F1ECDF; border-radius: 2px; }
+  .thumb-5 .pi-chat { flex: 1; background: #FAF7F0; border-radius: 3px; padding: 3px; display: flex; flex-direction: column; gap: 2px; }
+  .thumb-5 .pi-msg { height: 4px; border-radius: 2px; background: #F1ECDF; }
+  .thumb-5 .pi-msg.us { background: #2E5A9B; align-self: flex-end; width: 60%; }
+  .thumb-5 .pi-msg.tm { width: 70%; }
+
+  /* Thumb 6 — BR SaaS light */
+  .thumb-6 {
+    background:
+      radial-gradient(circle 200px at 20% 30%, rgba(46,90,155,0.06), transparent 70%),
+      radial-gradient(circle 180px at 80% 80%, rgba(46,90,155,0.08), transparent 70%),
+      #FFFFFF;
+    padding: 14px 16px;
+    display: grid; grid-template-columns: 1fr 1.1fr; gap: 10px;
+  }
+  .thumb-6 .left { display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+  .thumb-6 .badge {
+    display: inline-flex; gap: 5px; align-items: center;
+    background: rgba(74,222,128,0.12);
+    border: 1px solid rgba(74,222,128,0.3);
+    color: #1B8A50;
+    padding: 2px 7px; border-radius: 999px;
+    font-size: 8px; font-weight: 600;
+    align-self: flex-start;
+  }
+  .thumb-6 .badge::before { content: ""; width: 4px; height: 4px; border-radius: 50%; background: #1B8A50; }
+  .thumb-6 h2 { font-family: "Manrope", sans-serif; font-size: 18px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; margin: 0; color: #0B1426; }
+  .thumb-6 h2 .h { background: linear-gradient(135deg, #4378BC, #2E5A9B, #1E4480); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .thumb-6 .ll { font-size: 9px; color: #4A5775; margin: 0; line-height: 1.4; }
+  .thumb-6 .ctas { display: flex; gap: 4px; margin-top: 4px; }
+  .thumb-6 .b1 { background: #2E5A9B; color: white; font-size: 8px; padding: 4px 7px; border-radius: 4px; font-weight: 600; }
+  .thumb-6 .b2 { background: #25D366; color: white; font-size: 8px; padding: 4px 7px; border-radius: 4px; font-weight: 600; }
+
+  .thumb-6 .dash {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F2;
+    border-radius: 8px;
+    padding: 7px;
+    display: flex; flex-direction: column; gap: 5px;
+    box-shadow: 0 8px 20px rgba(46,90,155,0.08);
+  }
+  .thumb-6 .d-h { display: flex; justify-content: space-between; align-items: center; }
+  .thumb-6 .d-h .tt { font-size: 8px; font-weight: 600; color: #0B1426; }
+  .thumb-6 .d-h .dot-g { width: 5px; height: 5px; background: #4ADE80; border-radius: 50%; }
+  .thumb-6 .d-st { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+  .thumb-6 .d-st > div { padding: 4px 5px; background: #F4F7FB; border: 1px solid #E2E8F2; border-radius: 4px; }
+  .thumb-6 .d-st .v { font-size: 10px; font-weight: 700; letter-spacing: -0.02em; color: #0B1426; }
+  .thumb-6 .d-st .l { font-size: 6px; color: #7A8AA8; text-transform: uppercase; letter-spacing: 0.08em; }
+  .thumb-6 .d-bars { display: flex; gap: 2px; align-items: flex-end; height: 24px; }
+  .thumb-6 .d-bars > div { flex: 1; background: linear-gradient(135deg, #4378BC, #2E5A9B, #1E4480); border-radius: 1px 1px 0 0; opacity: 0.9; }
+
+  /* Card body */
+  .v-body {
+    padding: 24px 26px 28px;
+    display: flex; flex-direction: column; gap: 14px; flex: 1;
+  }
+  .v-tag {
+    font-family: "Geist Mono", monospace;
+    font-size: 11px;
+    color: var(--blue-light);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .v-card h3 {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    margin: 0;
+  }
+  .v-card p {
+    color: var(--text-mute);
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.55;
+    flex: 1;
+  }
+  .v-meta {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-soft);
+  }
+  .v-meta span {
+    font-family: "Geist Mono", monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    background: var(--bg-base);
+    border: 1px solid var(--border-soft);
+    padding: 3px 8px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .v-cta {
+    display: inline-flex; align-items: center; justify-content: space-between;
+    margin-top: 4px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 500;
+    transition: all .18s;
+  }
+  .v-card:hover .v-cta {
+    background: var(--blue);
+    color: white;
+    border-color: var(--blue);
+  }
+  .v-cta .arrow { transition: transform .2s; }
+  .v-card:hover .v-cta .arrow { transform: translateX(4px); }
+
+  /* Notes section */
+  section.notes {
+    padding: 80px 0 100px;
+    border-top: 1px solid var(--border-soft);
+    margin-top: 60px;
+  }
+  .notes-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 64px;
+  }
+  .notes-grid .num {
+    font-family: "Geist Mono", monospace;
+    font-size: 12px;
+    color: var(--blue-light);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+  .notes-grid h2 {
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0;
+    max-width: 300px;
+  }
+  .notes-list { display: flex; flex-direction: column; gap: 20px; }
+  .note-item {
+    padding: 24px;
+    border: 1px solid var(--border-soft);
+    border-radius: 14px;
+    background: var(--bg-elev);
+  }
+  .note-item h4 { font-size: 16px; font-weight: 500; margin: 0 0 8px; letter-spacing: -0.01em; }
+  .note-item p { font-size: 14px; color: var(--text-mute); margin: 0; line-height: 1.6; }
+  .note-item h4 .lbl {
+    font-family: "Geist Mono", monospace;
+    font-size: 11px;
+    color: var(--blue-light);
+    margin-right: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  footer.bot {
+    padding: 24px 0 48px;
+    border-top: 1px solid var(--border-soft);
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 13px;
+    font-family: "Geist Mono", monospace;
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 960px) {
+    .versions { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 680px) {
+    .versions { grid-template-columns: 1fr; }
+    .notes-grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<header class="top">
+  <div class="wrap">
+    <img src="assets/kora-logo.jpg" alt="Kora Hub" class="logo" />
+    <div>
+      <span class="eyebrow"><span class="dot"></span> Exploração de design · 6 direções</span>
+    </div>
+    <h1>Seis caminhos para o<br/>site da <em>Kora Hub.</em></h1>
+    <p class="lead">Três direções em modo escuro (dark navy + azul metálico) e três espelhadas em modo claro (claro com azul como destaque). Em todas, a logo fica centralizada no topo.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- DARK THEME SECTION -->
+  <section class="theme-section">
+    <div class="theme-label dark">
+      <span>Modo escuro · dark navy + azul metálico</span>
+      <span class="line"></span>
+      <span class="count">3 versões</span>
+    </div>
+
+    <div class="versions">
+
+      <!-- V1 -->
+      <a class="v-card" href="v1-linear.html">
+        <div class="v-thumb">
+          <div class="thumb-1">
+            <div class="row">
+              <div class="menu"><span>Soluções</span><span>Integrações</span></div>
+              <div class="lg"></div>
+              <div class="menu"><span>Sobre</span><span style="padding: 2px 6px; background: #5A8FD6; color: white; border-radius: 3px;">WhatsApp</span></div>
+            </div>
+            <div>
+              <h2>Conecte seu ERP<br/>com <em>IA</em></h2>
+              <p class="l">Chats, WhatsApp, marketplaces e ERP em uma camada inteligente.</p>
+              <div class="ctas">
+                <span class="btn-s">Falar com especialista</span>
+                <span class="btn-s g">Ver soluções</span>
+              </div>
+            </div>
+            <div class="grid-mini">
+              <div><div class="ico-s"></div><div class="nm-s">Chat IA</div><div class="ds-s">Atendimento</div></div>
+              <div><div class="ico-s"></div><div class="nm-s">WhatsApp</div><div class="ds-s">Canal principal</div></div>
+              <div><div class="ico-s"></div><div class="nm-s">Marketplaces</div><div class="ds-s">Multi-canal</div></div>
+              <div><div class="ico-s"></div><div class="nm-s">ERP</div><div class="ds-s">Núcleo</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="v-body">
+          <div class="v-tag">V1 · Linear / Vercel</div>
+          <h3>Tech minimalista</h3>
+          <p>Grid estreito, microinterações sutis. Posicionamento "plataforma moderna e developer-friendly".</p>
+          <div class="v-meta">
+            <span>Dark</span>
+            <span>Geist</span>
+            <span>Mono accents</span>
+          </div>
+          <div class="v-cta">
+            <span>Abrir versão</span>
+            <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </a>
+
+      <!-- V2 -->
+      <a class="v-card" href="v2-apple.html">
+        <div class="v-thumb">
+          <div class="thumb-2">
+            <span class="eb">Plataforma com IA</span>
+            <h2>A inteligência<br/>por trás da<br/><em>sua operação.</em></h2>
+            <p class="ll">Chats, WhatsApp, marketplaces e ERP unidos em uma camada só.</p>
+            <span class="btn-r">Falar no WhatsApp</span>
+            <div class="product-mini">
+              <div class="product-inner">
+                <div class="pi-side">
+                  <div class="pi-row a"></div>
+                  <div class="pi-row"></div>
+                  <div class="pi-row"></div>
+                  <div class="pi-row"></div>
+                </div>
+                <div class="pi-main">
+                  <div class="pi-st"><div></div><div></div><div></div></div>
+                  <div class="pi-chat">
+                    <div class="pi-msg tm"></div>
+                    <div class="pi-msg us"></div>
+                    <div class="pi-msg tm"></div>
+                    <div class="pi-msg us"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="v-body">
+          <div class="v-tag">V2 · Apple Premium</div>
+          <h3>Editorial cinemático</h3>
+          <p>Tipografia gigante em serif itálico, full-bleed, momentos com pausas. Posicionamento premium.</p>
+          <div class="v-meta">
+            <span>Dark</span>
+            <span>Instrument Serif</span>
+            <span>Mockups</span>
+          </div>
+          <div class="v-cta">
+            <span>Abrir versão</span>
+            <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </a>
+
+      <!-- V3 -->
+      <a class="v-card" href="v3-saas.html">
+        <div class="v-thumb">
+          <div class="thumb-3">
+            <div class="left">
+              <span class="badge">+180 empresas</span>
+              <h2>IA que <span class="h">conecta</span> seu ERP e WhatsApp.</h2>
+              <p class="ll">Mercado Livre, Shopee, VTEX, Tiny, Bling e o canal preferido do BR.</p>
+              <div class="ctas">
+                <span class="b1">Agendar demo</span>
+                <span class="b2">WhatsApp</span>
+              </div>
+            </div>
+            <div class="dash">
+              <div class="d-h">
+                <span class="tt">Kora · Visão geral</span>
+                <span class="dot-g"></span>
+              </div>
+              <div class="d-st">
+                <div><div class="v">3.247</div><div class="l">Conv.</div></div>
+                <div><div class="v">82%</div><div class="l">IA</div></div>
+                <div><div class="v">184k</div><div class="l">Vendas</div></div>
+              </div>
+              <div class="d-bars">
+                <div style="height: 30%"></div>
+                <div style="height: 45%"></div>
+                <div style="height: 35%"></div>
+                <div style="height: 60%"></div>
+                <div style="height: 75%"></div>
+                <div style="height: 90%"></div>
+                <div style="height: 80%"></div>
+                <div style="height: 65%"></div>
+                <div style="height: 55%"></div>
+                <div style="height: 45%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="v-body">
+          <div class="v-tag">V3 · BR SaaS</div>
+          <h3>Conversion-focused</h3>
+          <p>Dashboard mockup no hero, social proof rico, formulário, badges. Estilo "landing brasileira".</p>
+          <div class="v-meta">
+            <span>Dark</span>
+            <span>Manrope</span>
+            <span>Dashboard</span>
+          </div>
+          <div class="v-cta">
+            <span>Abrir versão</span>
+            <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- LIGHT THEME SECTION -->
+  <section class="theme-section">
+    <div class="theme-label light">
+      <span>Modo claro · branco/cream com azul de destaque</span>
+      <span class="line"></span>
+      <span class="count">3 versões</span>
+    </div>
+
+    <div class="versions">
+
+      <!-- V4 -->
+      <a class="v-card" href="v4-linear-light.html">
+        <div class="v-thumb">
+          <div class="thumb-4">
+            <div class="row">
+              <div class="menu"><span>Soluções</span><span>Integrações</span></div>
+              <div class="lg"></div>
+              <div class="menu"><span>Sobre</span><span style="padding: 2px 6px; background: #2E5A9B; color: white; border-radius: 3px;">WhatsApp</span></div>
+            </div>
+            <div>
+              <h2>Conecte seu ERP<br/>com <em>IA</em></h2>
+              <p class="l">Chats, WhatsApp, marketplaces e ERP em uma camada inteligente.</p>
+              <div class="ctas">
+                <span class="btn-s">Falar com especialista</span>
+                <span class="btn-s g">Ver soluções</span>
+              </div>
+            </div>
+            <div class="grid-mini">
+              <div><div class="ico-s"></div><div class="nm-s">Chat IA</div><div class="ds-s">Atendimento</div></div>
+              <div><div class="ico-s"></div><div class="nm-s">WhatsApp</div><div class="ds-s">Canal principal</div></div>
+              <div><div class="ico-s"></div><div class="nm-s">Marketplaces</div><div class="ds-s">Multi-canal</div></div>
+              <div><div class="ico-s"></div><div class="nm-s">ERP</div><div class="ds-s">Núcleo</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="v-body">
+          <div class="v-tag">V4 · Linear / Vercel · LIGHT</div>
+          <h3>Tech minimalista claro</h3>
+          <p>Mesma estrutura do V1, mas com fundo branco, tipografia preta e azul como acento. Limpo e moderno.</p>
+          <div class="v-meta">
+            <span>Light</span>
+            <span>Geist</span>
+            <span>Whitespace</span>
+          </div>
+          <div class="v-cta">
+            <span>Abrir versão</span>
+            <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </a>
+
+      <!-- V5 -->
+      <a class="v-card" href="v5-apple-light.html">
+        <div class="v-thumb">
+          <div class="thumb-5">
+            <span class="eb">Plataforma com IA</span>
+            <h2>A inteligência<br/>por trás da<br/><em>sua operação.</em></h2>
+            <p class="ll">Chats, WhatsApp, marketplaces e ERP unidos em uma camada só.</p>
+            <span class="btn-r">Falar no WhatsApp</span>
+            <div class="product-mini">
+              <div class="product-inner">
+                <div class="pi-side">
+                  <div class="pi-row a"></div>
+                  <div class="pi-row"></div>
+                  <div class="pi-row"></div>
+                  <div class="pi-row"></div>
+                </div>
+                <div class="pi-main">
+                  <div class="pi-st"><div></div><div></div><div></div></div>
+                  <div class="pi-chat">
+                    <div class="pi-msg tm"></div>
+                    <div class="pi-msg us"></div>
+                    <div class="pi-msg tm"></div>
+                    <div class="pi-msg us"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="v-body">
+          <div class="v-tag">V5 · Apple Premium · LIGHT</div>
+          <h3>Editorial cream</h3>
+          <p>Fundo cream warm, serif itálico, tipografia gigante. Sensação editorial — magazine premium.</p>
+          <div class="v-meta">
+            <span>Light</span>
+            <span>Cream warm</span>
+            <span>Instrument Serif</span>
+          </div>
+          <div class="v-cta">
+            <span>Abrir versão</span>
+            <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </a>
+
+      <!-- V6 -->
+      <a class="v-card" href="v6-saas-light.html">
+        <div class="v-thumb">
+          <div class="thumb-6">
+            <div class="left">
+              <span class="badge">+180 empresas</span>
+              <h2>IA que <span class="h">conecta</span> seu ERP e WhatsApp.</h2>
+              <p class="ll">Mercado Livre, Shopee, VTEX, Tiny, Bling e o canal preferido do BR.</p>
+              <div class="ctas">
+                <span class="b1">Agendar demo</span>
+                <span class="b2">WhatsApp</span>
+              </div>
+            </div>
+            <div class="dash">
+              <div class="d-h">
+                <span class="tt">Kora · Visão geral</span>
+                <span class="dot-g"></span>
+              </div>
+              <div class="d-st">
+                <div><div class="v">3.247</div><div class="l">Conv.</div></div>
+                <div><div class="v">82%</div><div class="l">IA</div></div>
+                <div><div class="v">184k</div><div class="l">Vendas</div></div>
+              </div>
+              <div class="d-bars">
+                <div style="height: 30%"></div>
+                <div style="height: 45%"></div>
+                <div style="height: 35%"></div>
+                <div style="height: 60%"></div>
+                <div style="height: 75%"></div>
+                <div style="height: 90%"></div>
+                <div style="height: 80%"></div>
+                <div style="height: 65%"></div>
+                <div style="height: 55%"></div>
+                <div style="height: 45%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="v-body">
+          <div class="v-tag">V6 · BR SaaS · LIGHT</div>
+          <h3>SaaS bright</h3>
+          <p>Branco clean estilo RD/Resultados Digitais, dashboard mockup, formulário no hero. Pensado para conversão.</p>
+          <div class="v-meta">
+            <span>Light</span>
+            <span>Manrope</span>
+            <span>Conversão</span>
+          </div>
+          <div class="v-cta">
+            <span>Abrir versão</span>
+            <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <section class="notes">
+    <div class="notes-grid">
+      <div>
+        <div class="num">— Notas</div>
+        <h2>Decisões e como combinar</h2>
+      </div>
+      <div class="notes-list">
+        <div class="note-item">
+          <h4><span class="lbl">Pareamento</span>Cada light é o espelho de uma dark.</h4>
+          <p>V4 ↔ V1 (Linear minimalista), V5 ↔ V2 (Apple premium), V6 ↔ V3 (BR SaaS). Mesma estrutura, mesmo conteúdo, paleta invertida. Útil pra comparar como cada direção se sente nos dois modos.</p>
+        </div>
+        <div class="note-item">
+          <h4><span class="lbl">Logo</span>SVG vetorial nas claras.</h4>
+          <p>As versões light usam <code>assets/kora-logo-light.svg</code> — uma versão recriada da marca em SVG, com a "K" gradiente azul + texto "Kora" em preto. Funciona em qualquer fundo claro sem o conflito do JPG (que tem fundo navy embutido).</p>
+        </div>
+        <div class="note-item">
+          <h4><span class="lbl">Paleta</span>Azul da logo como referência única.</h4>
+          <p>Em todas as 6 versões, o gradiente metálico da logo (#9FC5F0 → #5A8FD6 → #2E5A9B) é o acento. Nas dark é mais claro; nas light é mais saturado/escuro pra ter contraste sobre branco.</p>
+        </div>
+        <div class="note-item">
+          <h4><span class="lbl">Recursos compartilhados</span>JavaScript + favicon.</h4>
+          <p>Todas as 6 carregam o mesmo <code>js/kora.js</code> (smooth scroll, scroll reveals, contadores animados, filtro de integrações, menu mobile) e o mesmo favicon SVG.</p>
+        </div>
+        <div class="note-item">
+          <h4><span class="lbl">Próximo passo</span>Escolha, ou combine.</h4>
+          <p>Você pode pegar elementos de mais de uma versão — ex.: hero da V5, integrações da V6, footer da V1. Me fala qual direção quer aprofundar e eu detalho.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer class="bot">
+  © 2026 · Kora Hub · Exploração de design
+</footer>
+
+<script src="js/kora.js"></script>
+</body>
+</html>
